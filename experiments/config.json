@@ -1,0 +1,90 @@
+{
+  "model": {
+    "sample_rate": 44100,
+    "channels": 2,
+    "encoder_dim": 512,
+    "decoder_dim": 512,
+    "codebook_size": 1024,
+    "compression_ratios": [
+      8,
+      5,
+      4,
+      2
+    ]
+  },
+  "training": {
+    "batch_size": 8,
+    "num_epochs": 200,
+    "save_every": 10,
+    "validate_every": 5,
+    "gradient_clip": 1.0
+  },
+  "optimizer": {
+    "gen_lr": 0.0001,
+    "disc_lr": 0.0001,
+    "betas": [
+      0.8,
+      0.99
+    ],
+    "weight_decay": 0.0001
+  },
+  "scheduler": {
+    "use_scheduler": true,
+    "gamma": 0.999
+  },
+  "losses": {
+    "reconstruction_weight": 1.0,
+    "perceptual_weight": 1.0,
+    "music_weight": 0.5,
+    "adversarial_weight": 0.1,
+    "feature_matching_weight": 10.0,
+    "l1_weight": 1.0,
+    "l2_weight": 0.0,
+    "stft_weight": 1.0,
+    "mel_weight": 1.0,
+    "use_perceptual": true,
+    "use_spectral_loss": true,
+    "use_mel_loss": true,
+    "use_mfcc_loss": true,
+    "spectral_weight": 1.0,
+    "mfcc_weight": 0.5,
+    "use_music": true,
+    "harmonic_weight": 1.0,
+    "rhythmic_weight": 1.0,
+    "timbre_weight": 1.0,
+    "adversarial_type": "hinge",
+    "use_feature_matching": true
+  },
+  "discriminator": {
+    "use_adversarial": true,
+    "discriminator_scales": [
+      1,
+      2,
+      4
+    ],
+    "use_spectral_discriminator": true,
+    "base_channels": 64,
+    "max_channels": 512
+  },
+  "data": {
+    "audio_length": 65536,
+    "sample_rate": 44100,
+    "num_workers": 4,
+    "pin_memory": true
+  },
+  "logging": {
+    "log_interval": 100,
+    "save_audio_samples": true,
+    "num_audio_samples": 4
+  },
+  "experiment": {
+    "name": "neural_audio_codec_v1",
+    "description": "Neural audio codec with hierarchical VQ and multi-scale discriminator",
+    "tags": [
+      "audio",
+      "codec",
+      "vq",
+      "adversarial"
+    ]
+  }
+}
