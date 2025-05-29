@@ -21,6 +21,7 @@ from pathlib import Path
 import sys
 import os
 import tempfile
+import json
 
 # Try to import soundfile as fallback
 try:
@@ -38,19 +39,27 @@ import torch.nn.functional as F
 
 class AudioCodecDemo:
     def __init__(self):
-        """Initialize the demo with a pre-trained or randomly initialized model"""
+        """Initialize the demo with the pretrained model"""
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.sample_rate = 44100
         
-        # Initialize model
-        self.codec = NeuralAudioCodec(
-            encoder_dim=128,
-            decoder_dim=128,
-            codebook_size=256,
-            num_quantizers=2,
-            compression_ratios=[8, 16, 32],
-            sample_rate=self.sample_rate
-        ).to(self.device)
+        # Load pretrained model
+        pretrained_path = Path(__file__).parent.parent / "experiments/pretrained/pretrained_model.pt"
+        if not pretrained_path.exists():
+            raise RuntimeError(
+                "Pretrained model not found! Please run pretrain_model.py first:\n"
+                "python pretrain_model.py"
+            )
+        
+        # Load checkpoint
+        checkpoint = torch.load(pretrained_path, map_location=self.device)
+        config = checkpoint['config']
+        
+        # Initialize model with saved config
+        self.codec = NeuralAudioCodec(**config).to(self.device)
+        
+        # Load pretrained weights
+        self.codec.load_state_dict(checkpoint['model_state_dict'])
         
         # Set to eval mode
         self.codec.eval()
@@ -103,11 +112,6 @@ class AudioCodecDemo:
         
         try:
             print(f"Processing audio with shape: {waveform.shape}")
-            
-            # Enable comprehensive pre-training for meaningful audio compression
-            print("🚀 Applying enhanced comprehensive pre-training for your audio...")
-            print("⏳ This will take 3-5 minutes but will dramatically improve quality...")
-            self.codec.quick_pretrain(waveform, num_steps=50)
             
             with torch.no_grad():
                 # Get original audio info

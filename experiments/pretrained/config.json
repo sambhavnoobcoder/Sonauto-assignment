@@ -1,0 +1,32 @@
+{
+  "sample_rate": 44100,
+  "channels": 2,
+  "encoder_dim": 128,
+  "decoder_dim": 128,
+  "codebook_size": 1024,
+  "codebook_dim": 256,
+  "num_quantizers": 8,
+  "commitment_weight": 0.25,
+  "compression_ratios": [
+    8,
+    16,
+    32
+  ],
+  "use_music_features": true,
+  "losses": {
+    "reconstruction_weight": 1.0,
+    "perceptual_weight": 1.0,
+    "music_weight": 1.0,
+    "use_perceptual": true,
+    "use_music": true
+  },
+  "optimizer": {
+    "gen_lr": 0.0001,
+    "disc_lr": 0.0001,
+    "betas": [
+      0.8,
+      0.99
+    ],
+    "weight_decay": 0.0001
+  }
+}
